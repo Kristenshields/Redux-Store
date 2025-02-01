@@ -1,54 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import ProductItem from '../ProductItem';
-import { useStoreContext } from '../../utils/GlobalState';
-import { UPDATE_PRODUCTS } from '../../utils/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProducts } from '../../redux/slices/productSlice';
 import { useQuery } from '@apollo/client';
 import { QUERY_PRODUCTS } from '../../utils/queries';
 import { idbPromise } from '../../utils/helpers';
 import spinner from '../../assets/spinner.gif';
 
 function ProductList() {
-  const [state, dispatch] = useStoreContext();
-
-  const { currentCategory } = state;
-
+  const dispatch = useDispatch();
+  const { currentCategory } = useSelector(state => state.categories);
   const { loading, data } = useQuery(QUERY_PRODUCTS);
+  const { products: reduxProducts } = useSelector(state => state.products);
+  const products = data?.products || reduxProducts || [];
 
   useEffect(() => {
-    if (data) {
-      dispatch({
-        type: UPDATE_PRODUCTS,
-        products: data.products,
-      });
+    if (data?.products) {
+      dispatch(updateProducts(data.products));
       data.products.forEach((product) => {
         idbPromise('products', 'put', product);
       });
-    } else if (!loading) {
-      idbPromise('products', 'get').then((products) => {
-        dispatch({
-          type: UPDATE_PRODUCTS,
-          products: products,
-        });
-      });
     }
-  }, [data, loading, dispatch]);
+  }, [data, dispatch]);
 
-  function filterProducts() {
+  const filterProducts = useMemo(() => {
     if (!currentCategory) {
-      return state.products;
+      return products;
     }
-
-    return state.products.filter(
-      (product) => product.category._id === currentCategory
-    );
-  }
+    return products.filter(product => product.category?._id === currentCategory);
+  }, [currentCategory, products]);
 
   return (
     <div className="my-2">
       <h2>Our Products:</h2>
-      {state.products.length ? (
+      {products.length ? (
         <div className="flex-row">
-          {filterProducts().map((product) => (
+          {filterProducts.map((product) => (
             <ProductItem
               key={product._id}
               _id={product._id}

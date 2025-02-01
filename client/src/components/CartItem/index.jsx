@@ -1,47 +1,32 @@
-import { useStoreContext } from "../../utils/GlobalState";
-import { REMOVE_FROM_CART, UPDATE_CART_QUANTITY } from "../../utils/actions";
+import { useDispatch } from 'react-redux';
+import { removeFromCart, updateCartQuantity } from '../../redux/slices/cartSlice';
 import { idbPromise } from "../../utils/helpers";
 
 const CartItem = ({ item }) => {
+  
+  const dispatch = useDispatch();
 
-  const [, dispatch] = useStoreContext();
-
-  const removeFromCart = item => {
-    dispatch({
-      type: REMOVE_FROM_CART,
-      _id: item._id
-    });
+  const removeFromCartHandler = () => {
+    dispatch(removeFromCart(item._id));
     idbPromise('cart', 'delete', { ...item });
-
   };
 
   const onChange = (e) => {
-    const value = e.target.value;
-    if (value === '0') {
-      dispatch({
-        type: REMOVE_FROM_CART,
-        _id: item._id
-      });
+    const value = parseInt(e.target.value, 10);
+
+    if (value === 0) {
+      dispatch(removeFromCart(item._id));
       idbPromise('cart', 'delete', { ...item });
-
     } else {
-      dispatch({
-        type: UPDATE_CART_QUANTITY,
-        _id: item._id,
-        purchaseQuantity: parseInt(value)
-      });
-      idbPromise('cart', 'put', { ...item, purchaseQuantity: parseInt(value) });
-
+      dispatch(updateCartQuantity(item._id, value));
+      idbPromise('cart', 'put', { ...item, purchaseQuantity: value });
     }
-  }
+  };
 
   return (
     <div className="flex-row">
       <div>
-        <img
-          src={`/images/${item.image}`}
-          alt=""
-        />
+        <img src={`/images/${item.image}`} alt="" />
       </div>
       <div>
         <div>{item.name}, ${item.price}</div>
@@ -54,9 +39,9 @@ const CartItem = ({ item }) => {
             onChange={onChange}
           />
           <span
-            role="img"
+            ole="img"
             aria-label="trash"
-            onClick={() => removeFromCart(item)}
+            onClick={() => removeFromCartHandler(item)}
           >
             🗑️
           </span>
