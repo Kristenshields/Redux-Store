@@ -55,4 +55,4 @@ const typeDefs = `
   }
 `;
 
-module.exports = typeDefs;
+export  { typeDefs };

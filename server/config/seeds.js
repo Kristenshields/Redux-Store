@@ -1,6 +1,6 @@
-const db = require('./connection');
-const { User, Product, Category } = require('../models');
-const cleanDB = require('./cleanDB');
+import db from './connection.js';
+import { User, Product, Category } from '../models/index.js';
+import cleanDB from './cleanDB.js';
 
 db.once('open', async () => {
   await cleanDB('Category', 'categories');

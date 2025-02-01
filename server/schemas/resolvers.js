@@ -1,6 +1,11 @@
-const { User, Product, Category, Order } = require('../models');
-const { signToken, AuthenticationError } = require('../utils/auth');
-const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+import User from '../models/User.js';
+import Product from '../models/Product.js';
+import Category from '../models/Category.js';
+import Order from '../models/Order.js';
+import { signToken, AuthenticationError } from '../utils/auth.js';
+import stripe from 'stripe';
+
+const stripeClient = stripe('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const resolvers = {
   Query: {
@@ -59,13 +64,13 @@ const resolvers = {
       const { products } = await order.populate('products');
 
       for (let i = 0; i < products.length; i++) {
-        const product = await stripe.products.create({
+        const product = await stripeClient.products.create({
           name: products[i].name,
           description: products[i].description,
           images: [`${url}/images/${products[i].image}`]
         });
 
-        const price = await stripe.prices.create({
+        const price = await stripeClient.prices.create({
           product: product.id,
           unit_amount: products[i].price * 100,
           currency: 'usd',
@@ -77,7 +82,7 @@ const resolvers = {
         });
       }
 
-      const session = await stripe.checkout.sessions.create({
+      const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items,
         mode: 'payment',
@@ -138,4 +143,4 @@ const resolvers = {
   }
 };
 
-module.exports = resolvers;
+export { resolvers };
