@@ -1,11 +1,14 @@
-const express = require('express');
-const { ApolloServer } = require('@apollo/server');
-const { expressMiddleware } = require('@apollo/server/express4');
-const path = require('path');
-const { authMiddleware } = require('./utils/auth');
+import express from 'express';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import path from 'path';
+import { authMiddleware } from './utils/auth.js';
+import { typeDefs, resolvers } from './schemas/index.js';
+import db from './config/connection.js';
+import { fileURLToPath } from 'url';
 
-const { typeDefs, resolvers } = require('./schemas');
-const db = require('./config/connection');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -18,7 +21,7 @@ const server = new ApolloServer({
 const startApolloServer = async () => {
   await server.start();
 
-  app.use(express.urlencoded({ extended: false }));
+  app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
   // Serve up static assets
@@ -31,7 +34,7 @@ const startApolloServer = async () => {
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));
 
-    app.get('*', (req, res) => {
+    app.get('*', (_req, res) => {
       res.sendFile(path.join(__dirname, '../client/dist/index.html'));
     });
   }
