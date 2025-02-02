@@ -2,9 +2,10 @@
   "name": "mern-server",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "server.js",
+  "type": "module",
   "scripts": {
+    "start": "node server.js",
     "watch": "nodemon",
     "seed": "node config/seeds.js"
   },
@@ -20,6 +21,7 @@
     "mongoose": "^8.0.0",
     "semver": "^7.7.0",
     "stripe": "^8.67.0"
+  
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
