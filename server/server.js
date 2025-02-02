@@ -26,6 +26,8 @@ const startApolloServer = async () => {
 
   // Serve up static assets
   app.use('/images', express.static(path.join(__dirname, '../client/public/images')));
+  console.log("Serving static files from:", path.join(__dirname, '../client/public/images')); // Add this line
+  console.log("Static files available at: http://localhost:" + PORT + "/images"); // Add this line.
 
   app.use('/graphql', expressMiddleware(server, {
     context: authMiddleware
