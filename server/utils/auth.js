@@ -1,8 +1,20 @@
 import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
-const secret = process.env.JWT_SECRET || '';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
+
+console.log("Loaded JWT_SECRET:", process.env.JWT_SECRET);  
+
+const secret = process.env.JWT_SECRET;
+if (!secret) {
+  throw new Error("JWT_SECRET is missing from the environment variables!");
+}
 console.log(process.env.JWT_SECRET);
 const expiration = '2h';
 

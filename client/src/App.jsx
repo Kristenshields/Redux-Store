@@ -10,10 +10,8 @@ import { setContext } from '@apollo/client/link/context';
 import Nav from './components/Nav';
 import { StoreProvider } from './utils/GlobalState';
 
-const graphqlUrl = import.meta.env.VITE_GRAPHQL_URL;
-
 const httpLink = createHttpLink({
-  uri: graphqlUrl,
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
