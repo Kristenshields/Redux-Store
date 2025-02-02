@@ -11,6 +11,9 @@
         "seed": "cd server && npm run seed",
         "build": "cd client && npm install && npm run build"
     },
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "keywords": [],
     "author": "",
     "license": "ISC",
@@ -21,7 +24,8 @@
         "dotenv": "^16.0.3",
         "express": "^4.21.2",
         "mongodb": "^6.13.0",
+        "@reduxjs/toolkit": "^2.5.0",
+        "react-redux": "^9.2.0",
         "mongoose": "^8.9.6"
     }
 }
-
