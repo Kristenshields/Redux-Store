@@ -29,7 +29,7 @@ function ProductItem(item) {
       <Link to={`/products/${_id}`}>
         <img 
         alt={name} 
-        src={`/images/${image}`} 
+        src={`${window.location.origin}/images/${image}`} 
         />
         <p>{name}</p>
       </Link>
