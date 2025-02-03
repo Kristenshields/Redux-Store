@@ -1,25 +1,17 @@
-# Redux Store Refactor - E-Commerce Platform
+# Redux Store
 
 ## Overview
-This project is an extra credit challenge that involves refactoring an existing e-commerce platform to use Redux for global state management. The goal is to replace React's Context API with Redux to better handle complex state in a scalable manner.
+This project involves refactoring an existing e-commerce platform to use Redux for global state management. The goal is to replace React's Context API with Redux to better handle complex state in a scalable manner.
 
-## Task Description
-Your objective is to refactor the e-commerce platform from Activity 26 so that it utilizes Redux instead of Context API. This requires understanding and implementing Redux principles such as:
-- Creating a Redux store
-- Defining actions and reducers
-- Connecting components to the store using Redux hooks
 
-## Why Redux?
-Redux is widely used in large-scale applications due to its predictable state management and centralized store. Unlike the Context API, which is best suited for lightweight state management, Redux provides robust tools for handling complex state logic.
-
-## Learning Objective
-This challenge is designed to simulate real-world scenarios where developers must learn and apply new technologies based on official documentation. By completing this task, you will gain hands-on experience working with Redux and improve your ability to navigate technical documentation effectively.
+ ## Table of Contents
+  - [Getting Started](#installation)
+  - [Key Concepts](#key-concepts)
+  - [Deployed Application](#deployed-application)
+  - [Improvments](#questions)
+  - [Resources](#resources)
 
 ## Getting Started
-### Prerequisites
-- Ensure you have Node.js and npm installed.
-- Clone the e-commerce platform repository from Activity 26.
-- Install dependencies using `npm install`.
 
 ### Steps to Implement Redux
 1. **Install Redux & React-Redux**
@@ -29,11 +21,11 @@ This challenge is designed to simulate real-world scenarios where developers mus
 
 2. **Create the Redux Store**
    - Set up a `store.js` file.
-   - Use `configureStore` from Redux Toolkit for easier configuration.
+   - Set up slices
+  
 
-3. **Define Actions and Reducers**
-   - Create action types and action creators.
-   - Implement reducers to update state based on dispatched actions.
+3. **Install Dependencies**
+   - npm install  
 
 4. **Connect Redux to the Application**
    - Wrap the application in the `<Provider>` component from `react-redux`.
@@ -44,16 +36,17 @@ This challenge is designed to simulate real-world scenarios where developers mus
 - [React-Redux Documentation](https://react-redux.js.org/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 
-## Submission Instructions
-- Ensure the application functions as expected with Redux.
-- Test state updates using Redux DevTools.
-- Submit your refactored code along with a brief explanation of your implementation choices.
+## Deployed Application
 
-## Additional Notes
-- This exercise emphasizes self-learning and problem-solving using documentation.
-- Feel free to optimize the store structure and improve performance where necessary.
+https://redux-store-xo75.onrender.com/
 
----
+
+## Improvments
+Getting images to show up on deployed site.
+
+## Resources
+ChatGPT, and lots of googling
+
 **Author:** Kristen Shields  
-**Project:** Redux Store Refactor - E-Commerce Platform
+
 
