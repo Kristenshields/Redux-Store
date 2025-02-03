@@ -25,7 +25,7 @@ function CategoryMenu() {
     }
   }, [data, loading, dispatch, categories]);
 
-  const handleClick = (id) => {
+  const handleClick = id => {
     dispatch(updateCurrentCategory(id));
   };
 

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { pluralize } from "../../utils/helpers"
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from "../../redux/slices/cartSlice";
 import { idbPromise } from "../../utils/helpers";
@@ -22,24 +21,20 @@ function ProductItem(item) {
       idbPromise('cart', 'put', updatedItem);
     };
 
-    const { image, name, _id, price, quantity } = item;
-
-  return (
-    <div className="card px-1 py-1">
-      <Link to={`/products/${_id}`}>
-        <img 
-        alt={name} 
-        src={`${window.location.origin}/images/${image}`} 
-        />
-        <p>{name}</p>
-      </Link>
-      <div>
-        <div>{quantity} {pluralize("item", quantity)} in stock</div>
-        <span>${price}</span>
+    
+    return (
+      <div className="card px-1 py-1">
+        <Link to={`/products/${item._id}`}>
+          <img alt={item.name} src={`/images/${item.image}`} />
+          <p>{item.name}</p>
+        </Link>
+        <div>
+          <div>{item.quantity} in stock</div>
+          <span>${item.price}</span>
+        </div>
+        <button onClick={handleAddToCart}>Add to cart</button>
       </div>
-      <button onClick={handleAddToCart}>Add to cart</button>
-    </div>
-  );
-}
+    );
+  }
 
 export default ProductItem;

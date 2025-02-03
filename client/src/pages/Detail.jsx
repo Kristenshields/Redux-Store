@@ -113,7 +113,9 @@ function Detail() {
           </p>
 
           <img
-            src={`${window.location.origin}/images/${currentProduct.image}`}
+            src={`${process.env.NODE_ENV === "production" 
+              ? window.location.origin 
+              : ""}/images/${image}`}
             alt={currentProduct.name}
           />
         </div>

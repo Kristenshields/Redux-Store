@@ -26,7 +26,9 @@ const CartItem = ({ item }) => {
   return (
     <div className="flex-row">
       <div>
-        <img src={`${window.location.origin}/images/${item.image}`} alt="" />
+        <img src={`${process.env.NODE_ENV === "production" 
+    ? window.location.origin 
+    : ""}/images/${item.image}`}  alt="" />
       </div>
       <div>
         <div>{item.name}, ${item.price}</div>
