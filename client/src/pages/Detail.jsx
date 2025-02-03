@@ -103,7 +103,7 @@ function Detail() {
 
           <p>
             <strong>Price:</strong>${currentProduct.price}{' '}
-            <button onClick={addToCart}>Add to Cart</button>
+            <button onClick={handleAddToCart}>Add to Cart</button>
             <button
               disabled={!cart.find((p) => p._id === currentProduct._id)}
               onClick={removeFromCart}
@@ -113,9 +113,7 @@ function Detail() {
           </p>
 
           <img
-            src={`${process.env.NODE_ENV === "production" 
-              ? window.location.origin 
-              : ""}/images/${image}`}
+            src={`/images/${currentProduct.image}`}
             alt={currentProduct.name}
           />
         </div>

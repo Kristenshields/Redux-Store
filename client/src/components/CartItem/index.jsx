@@ -26,9 +26,7 @@ const CartItem = ({ item }) => {
   return (
     <div className="flex-row">
       <div>
-        <img src={`${process.env.NODE_ENV === "production" 
-    ? window.location.origin 
-    : ""}/images/${item.image}`}  alt="" />
+        <img src={`/images/${item.image}`}  alt="" />
       </div>
       <div>
         <div>{item.name}, ${item.price}</div>
@@ -43,7 +41,7 @@ const CartItem = ({ item }) => {
           <span
             ole="img"
             aria-label="trash"
-            onClick={() => removeFromCartHandler(item)}
+            onClick={() => removeFromCartHandler}
           >
             🗑️
           </span>
