@@ -27,7 +27,7 @@ function ProductList() {
     if (!currentCategory) {
       return products;
     }
-    return products.filter(product => product.category._id === currentCategory);
+    return products.filter(product => product.category?._id === currentCategory);
   }, [currentCategory, products]);
 
   return (
@@ -35,7 +35,7 @@ function ProductList() {
       <h2>Our Products:</h2>
       {products.length ? (
         <div className="flex-row">
-          {filterProducts().map((product) => (
+          {filterProducts.map((product) => (
             <ProductItem
               key={product._id}
               _id={product._id}

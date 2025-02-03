@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { pluralize } from "../../utils/helpers";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { idbPromise } from "../../utils/helpers";
 
@@ -8,30 +7,32 @@ function ProductItem(item) {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cart.cart);
 
+  const getImagePath = (imageName) => {
+    return `${window.location.origin}/images/${imageName}`;
+  };
+
   const handleAddToCart = () => {
-    const itemInCart = cart.find((cartItem) => cartItem._id === item._id);
-    
-    const updatedItem = itemInCart
-      ? {
-        ...itemInCart,
-        purchaseQuantity: itemInCart.purchaseQuantity + 1 
-      }
-      : { ...item, purchaseQuantity: 1 };
+    const itemInCart = cart.find(cartItem => cartItem._id === item._id);
+    const purchaseQuantity = itemInCart ? itemInCart.purchaseQuantity + 1 : 1;
 
-      dispatch(addToCart(updatedItem));
-      idbPromise('cart', 'put', updatedItem);
+    const updatedItem = { 
+      ...item, 
+      purchaseQuantity 
     };
-
+  
+    dispatch(addToCart(updatedItem));
+    idbPromise('cart', 'put', updatedItem);
+  };
     
     return (
       <div className="card px-1 py-1">
-        <Link to={`/products/${_id}`}>
-          <img alt={name} src={`/images/${image}`} />
-          <p>{name}</p>
-        </Link>
+          <Link to={`/products/${item._id}`}>
+          <img alt={item.name} src={getImagePath(item.image)} />
+          <p>{item.name}</p>
+          </Link>
         <div>
-        <div>{quantity} {pluralize("item", quantity)} in stock</div>
-        <span>${price}</span>
+        <div>{item.quantity} in stock</div>
+          <span>${item.price}</span>
         </div>
         <button onClick={handleAddToCart}>Add to cart</button>
       </div>

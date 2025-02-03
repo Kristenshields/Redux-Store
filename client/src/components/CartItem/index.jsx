@@ -3,8 +3,12 @@ import { removeFromCart, updateCartQuantity } from '../../redux/slices/cartSlice
 import { idbPromise } from "../../utils/helpers";
 
 const CartItem = ({ item }) => {
-  
   const dispatch = useDispatch();
+
+
+  const getImagePath = (imageName) => {
+    return `${window.location.origin}/images/${imageName}`;
+  };
 
   const removeFromCartHandler = () => {
     dispatch(removeFromCart(item._id));
@@ -26,7 +30,7 @@ const CartItem = ({ item }) => {
   return (
     <div className="flex-row">
       <div>
-        <img src={`/images/${item.image}`}  alt="" />
+      <img src={getImagePath(item.image)} alt={item.name} />
       </div>
       <div>
         <div>{item.name}, ${item.price}</div>
