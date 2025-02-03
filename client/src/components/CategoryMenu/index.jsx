@@ -11,20 +11,33 @@ function CategoryMenu() {
   const { loading, data } = useQuery(QUERY_CATEGORIES);
 
   useEffect(() => {
-    if (data && data.categories) {
-      dispatch(updateCategories(data.categories));
-      data.categories.forEach(category => {
-        idbPromise('categories', 'put', category);
-      });
+    if (data?.categories) {
+      const newCategories = data.categories;
+
+      
+      // Check if categories have actually changed before updating Redux state
+      const categoriesAreDifferent =
+        JSON.stringify(categories.map(c => c._id).sort()) !==
+        JSON.stringify(newCategories.map(c => c._id).sort());
+
+      if (categoriesAreDifferent) {
+        dispatch(updateCategories(newCategories));
+
+        // Ensure IndexedDB doesn't store duplicates
+        const uniqueCategories = new Map(newCategories.map(c => [c._id, c]));
+        uniqueCategories.forEach(category => {
+          idbPromise('categories', 'put', category);
+        });
+      }
     } else if (!loading && categories.length === 0) {
-      idbPromise('categories', 'get').then(categories => {
-        if (categories) {
-          dispatch(updateCategories(categories));
+      idbPromise('categories', 'get').then(storedCategories => {
+        if (storedCategories.length > 0) {
+          dispatch(updateCategories(storedCategories));
         }
       });
     }
-  }, [data, loading, dispatch, categories]);
-
+  }, [data, loading, dispatch]); 
+  
   const handleClick = id => {
     dispatch(updateCurrentCategory(id));
   };

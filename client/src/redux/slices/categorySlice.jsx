@@ -10,7 +10,8 @@ const categorySlice = createSlice({
   initialState,
   reducers: {
     updateCategories: (state, action) => {
-      state.categories = action.payload;
+      const uniqueCategories = Array.from(new Map(action.payload.map(c => [c._id, c])).values());
+      state.categories = uniqueCategories;
     },
     updateCurrentCategory: (state, action) => {
       state.currentCategory = action.payload;
