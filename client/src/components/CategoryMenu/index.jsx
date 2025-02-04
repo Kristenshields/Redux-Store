@@ -11,57 +11,44 @@ function CategoryMenu() {
   const { loading, data } = useQuery(QUERY_CATEGORIES);
 
   useEffect(() => {
-    if (data?.categories) {
-      const newCategories = data.categories;
+    if (!loading && data?.categories) {
+      const fetchedCategories = data.categories;
+      dispatch(updateCategories(fetchedCategories));
 
-      
-      // Check if categories have actually changed before updating Redux state
-      const categoriesAreDifferent =
-        JSON.stringify(categories.map(c => c._id).sort()) !==
-        JSON.stringify(newCategories.map(c => c._id).sort());
-
-      if (categoriesAreDifferent) {
-        dispatch(updateCategories(newCategories));
-
-        // Ensure IndexedDB doesn't store duplicates
-        const uniqueCategories = new Map(newCategories.map(c => [c._id, c]));
-        uniqueCategories.forEach(category => {
-          idbPromise('categories', 'put', category);
-        });
-      }
-    } else if (!loading && categories.length === 0) {
-      idbPromise('categories', 'get').then(storedCategories => {
-        if (storedCategories.length > 0) {
-          dispatch(updateCategories(storedCategories));
-        }
+      fetchedCategories.forEach(category => {
+        idbPromise('categories', 'put', category);
       });
-    }
-  }, [data, loading, dispatch]); 
-  
-  const handleClick = id => {
-    dispatch(updateCurrentCategory(id));
+    } 
+  }, [data, dispatch, loading]);
+
+    
+  const handleCategoryClick = (categoryId) => {
+    dispatch(updateCurrentCategory(categoryId));
   };
 
   return (
     <div>
       <h2>Choose a Category:</h2>
-      {categories.map((item) => (
+      {loading ? (
+        <p>loading categories...</p>
+      ) : data?.categories ? (
+     <>
+      {categories.map(category => (
         <button
-          key={item._id}
-          onClick={() => {
-            handleClick(item._id);
-          }}
+          key={category._id}
+          onClick={() => 
+            handleCategoryClick(category._id)}
         >
-          {item.name}
+          {category.name}
         </button>
       ))}
       <button
-        onClick={() => {
-          handleClick('');
-        }}
-      >
-        All
-      </button>
+        onClick={() => 
+          handleCategoryClick('')}>All</button>
+      </>
+      ) : (
+        <p>No categories found.</p>
+      )}
     </div>
   );
 }
