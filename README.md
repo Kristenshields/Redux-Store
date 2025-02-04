@@ -8,7 +8,6 @@ This project involves refactoring an existing e-commerce platform to use Redux f
   - [Getting Started](#installation)
   - [Key Concepts](#key-concepts)
   - [Deployed Application](#deployed-application)
-  - [Improvments](#questions)
   - [Resources](#resources)
 
 ## Getting Started
@@ -40,9 +39,6 @@ This project involves refactoring an existing e-commerce platform to use Redux f
 
 https://redux-store-xo75.onrender.com/
 
-
-## Improvments
-Getting images to show up on deployed site.
 
 ## Resources
 ChatGPT, and lots of googling
