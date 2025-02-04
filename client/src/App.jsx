@@ -1,42 +1,59 @@
 import { Outlet } from 'react-router-dom';
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-} from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-
+import { loginSuccess } from './redux/store';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Nav from './components/Nav';
-import { StoreProvider } from './utils/GlobalState';
+import { idbPromise } from './utils/helpers';
+import Auth from './utils/auth';
+import { addMultipleToCart } from './redux/slices/cartSlice'; 
+import { updateProducts } from './redux/slices/productSlice'; 
+import { updateCategories } from './redux/slices/categorySlice'; 
 
-const httpLink = createHttpLink({
-  uri: '/graphql',
-});
-
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('id_token');
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (Auth.loggedIn()) {
+        const token = Auth.getToken();
+        const user = Auth.getProfile();
+        dispatch(loginSuccess({ token, user }));
+      }
+    };
+
+    const syncIndexedDB = async () => {
+      const stores = ['cart', 'products', 'categories'];
+
+      for (const store of stores) {
+        const data = await idbPromise(store, 'get');
+        if (data?.length) {
+          switch (store) {
+            case 'cart':
+              dispatch(addMultipleToCart(data));
+              break;
+            case 'products':
+              dispatch(updateProducts(data));
+              break;
+            case 'categories':
+              dispatch(updateCategories(data));
+              break;
+            default:
+              console.warn(`Unknown store: ${store}`);
+          }
+        }
+      }
+    };
+
+    checkAuth();
+    syncIndexedDB();
+  }, [dispatch]);
+
   return (
-    <ApolloProvider client={client}>
-      <StoreProvider>
-        <Nav />
-        <Outlet />
-      </StoreProvider>
-    </ApolloProvider>
+    <>
+      <Nav />
+      <Outlet />
+    </>
   );
 }
 

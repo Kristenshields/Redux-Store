@@ -10,32 +10,47 @@ import spinner from '../../assets/spinner.gif';
 function ProductList() {
   const dispatch = useDispatch();
   const { currentCategory } = useSelector(state => state.categories);
-  const { loading, data } = useQuery(QUERY_PRODUCTS);
+  const { loading, data } = useQuery(QUERY_PRODUCTS, { 
+    variables: { category: currentCategory } 
+  });
   const { products: reduxProducts } = useSelector(state => state.products);
-  const products = data?.products || reduxProducts || [];
+
+
+  const productsToDisplay = useMemo(() => {
+        if (data?.products) {
+            return data.products;  
+        } else if (reduxProducts.length > 0) {
+            return reduxProducts; 
+        } else {
+            return []; 
+        }
+  }, [data?.products, reduxProducts]);
 
   useEffect(() => {
-    if (data?.products) {
+    if (!loading && data?.products) {
       dispatch(updateProducts(data.products));
       data.products.forEach((product) => {
         idbPromise('products', 'put', product);
       });
     }
-  }, [data, dispatch]);
+  }, [data, dispatch, loading]);
 
-  const filterProducts = useMemo(() => {
+  const filteredProducts = useMemo(() => {
     if (!currentCategory) {
-      return products;
+      return productsToDisplay;
     }
-    return products.filter(product => product.category?._id === currentCategory);
-  }, [currentCategory, products]);
+    return productsToDisplay.filter(product => product.category?._id === currentCategory);
+  }, [currentCategory, productsToDisplay]);
+
 
   return (
     <div className="my-2">
       <h2>Our Products:</h2>
-      {products.length ? (
+      {loading ? (
+        <img src={spinner} alt="loading" />
+      ) : filteredProducts.length ? ( 
         <div className="flex-row">
-          {filterProducts.map((product) => (
+          {filteredProducts.map((product) => ( 
             <ProductItem
               key={product._id}
               _id={product._id}
@@ -47,9 +62,8 @@ function ProductList() {
           ))}
         </div>
       ) : (
-        <h3>You haven't added any products yet!</h3>
+        <h3>{loading ? "Loading..." : "No products found for this category."}</h3> 
       )}
-      {loading ? <img src={spinner} alt="loading" /> : null}
     </div>
   );
 }

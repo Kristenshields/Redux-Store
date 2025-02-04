@@ -1,10 +1,10 @@
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { store } from './redux/store';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
-
 
 import App from './App.jsx';
 import Home from './pages/Home';
@@ -15,38 +15,51 @@ import Signup from './pages/Signup';
 import Success from './pages/Success';
 import OrderHistory from './pages/OrderHistory';
 
+const apolloClient = new ApolloClient({ 
+  uri: '/graphql',
+  cache: new InMemoryCache(),
+});
 
-const router = createBrowserRouter([
+const appRouter = createBrowserRouter([ 
   {
     path: '/',
     element: <App />,
-    error: <NoMatch />,
+    errorElement: <NoMatch />, 
     children: [
       {
-        index: true, 
-        element: <Home />
-      }, {
+        index: true,
+        element: <Home />,
+      },
+      {
         path: '/login',
-        element: <Login />
-      }, {
+        element: <Login />,
+      },
+      {
         path: '/signup',
-        element: <Signup />
-      }, {
+        element: <Signup />,
+      },
+      {
         path: '/success',
-        element: <Success />
-      }, {
+        element: <Success />,
+      },
+      {
         path: '/orderHistory',
-        element: <OrderHistory />
-      }, {
+        element: <OrderHistory />,
+      },
+      {
         path: '/products/:id',
-        element: <Detail />
-      }
-    ]
-  }
+        element: <Detail />,
+      },
+    ],
+  },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
-  <RouterProvider router={router} />
-  </Provider>
+const root = ReactDOM.createRoot(document.getElementById('root')); // Store root for potential future use
+
+root.render(
+  <ApolloProvider client={apolloClient}>
+    <Provider store={store}>
+      <RouterProvider router={appRouter} />
+    </Provider>
+  </ApolloProvider>
 );
