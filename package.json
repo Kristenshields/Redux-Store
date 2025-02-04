@@ -9,8 +9,6 @@
         "develop": "concurrently \"cd server && npm run start\" \"cd client && npm run dev\"",
         "build": "npm install && cd client && npm install && npm run build && cd ../server && npm install",
         "seed": "cd server && npm run seed"
-        
-       
     },
     "engines": {
         "node": ">=18.0.0"
@@ -20,5 +18,8 @@
     "license": "ISC",
     "devDependencies": {
         "concurrently": "^5.1.0"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7"
     }
 }

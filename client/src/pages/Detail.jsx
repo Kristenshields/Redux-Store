@@ -17,6 +17,10 @@ function Detail() {
   const cart = useSelector(state => state.cart.cart);
   const dispatch = useDispatch();
 
+  const getImagePath = (imageName) => {
+    return `${window.location.origin}/images/${imageName}`;
+  };
+
   useEffect(() => {
     if (products.length) {
       setCurrentProduct(products.find((product) => product._id === id));
